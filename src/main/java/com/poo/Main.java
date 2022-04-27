@@ -1,17 +1,111 @@
 package com.poo;
 
+import java.io.ObjectInputStream.GetField;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 public class Main 
 {
+    static List<Reserva> reservas = new ArrayList<>(); 
+    static List<Reserva> listaDeEspera;
     public static void main( String[] args ){
 
         Integer opcao;
-        List<Reserva> reservas;
         opcao = menu();
         
+        while(opcao<=6 && opcao>=1){
+            switch(opcao){
+            case 1:
+            reservarMesa();
+            opcao = menu();
+            break;
+            case 2:
+            pesquisarReserva();
+            opcao = menu();
+            break;
+            }
+        }
+        
+    }
+
+    private static void pesquisarReserva() {
+        String codigo = JOptionPane.showInputDialog("Informe o CPF ou CNPJ: " );
+        String totalReservas = reservas.toString();
+        boolean temReserva = totalReservas.contains(codigo);
+        if(temReserva){
+            JOptionPane.showMessageDialog(null,"Você tem reserva.");
+        }else{
+            JOptionPane.showMessageDialog(null,"Você não tem reserva.");
+        }
+    }
+
+    private static void reservarMesa() {
+        boolean reservaDisponivel = verificarDisponibilidade();
+        Integer tipoCliente = tipoCliente();
+        boolean pagamentoAVista = pagamentoAVista();
+        if(!reservaDisponivel){
+            JOptionPane.showMessageDialog(null,"Reservas esgotadas. Você entrará na lista de espera.");
+        }
+        if(tipoCliente == 1){   
+            String nome = JOptionPane.showInputDialog("Informe o nome: " );
+            String cnpj = JOptionPane.showInputDialog("Informe o CNPJ: " );
+            Cliente cliente = new PessoaJuridica(nome, cnpj);
+            if(reservaDisponivel){
+                reservas.add(new Reserva(cliente, pagamentoAVista));
+            }else{
+                listaDeEspera.add(new Reserva(cliente, pagamentoAVista));
+            }
+        }else{
+            String nome = JOptionPane.showInputDialog("Informe o nome: " );
+            String cpf = JOptionPane.showInputDialog("Informe o CPF: " );
+            Cliente cliente = new PessoaFisica(nome, cpf);
+            if(reservaDisponivel){
+                reservas.add(new Reserva(cliente, pagamentoAVista));
+            }else{
+                listaDeEspera.add(new Reserva(cliente, pagamentoAVista));
+            }
+        }
+    }
+
+    private static boolean verificarDisponibilidade() {
+        if(reservas.size()<=6){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private static boolean pagamentoAVista() {
+        boolean pagamentoAVista = false;
+        Integer tipoPagamento = null;
+        while(tipoPagamento == null || tipoPagamento < 1 || tipoPagamento > 2){
+            try{
+                tipoPagamento = Integer.parseInt(JOptionPane.showInputDialog("Digite 1 para pagamento a vista e 2 para pagamento parcelado." ));   
+                if(tipoPagamento.equals("1")){
+                    pagamentoAVista = true;
+                }else{
+                    pagamentoAVista = false;
+                }
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null,"Por favor, digite um número.");
+            } 
+        }
+        return pagamentoAVista; 
+    }
+
+    public static Integer tipoCliente(){
+        Integer tipoCliente = null;
+        
+        while(tipoCliente == null || tipoCliente < 1 || tipoCliente > 2){
+           try {
+                tipoCliente = Integer.parseInt(JOptionPane.showInputDialog("Digite 1 para pessoa jurídica e 2 para pessoa física." ));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,"Por favor, digite um número.");
+            } 
+        }
+        return tipoCliente;
     }
 
     public static Integer menu(){
