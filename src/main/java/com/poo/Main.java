@@ -1,5 +1,6 @@
 package com.poo;
 
+import java.io.Console;
 import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import javax.swing.JOptionPane;
 public class Main 
 {
     static List<Reserva> reservas = new ArrayList<>(); 
-    static List<Reserva> listaDeEspera;
+    static List<Reserva> listaDeEspera= new ArrayList<>();
     public static void main( String[] args ){
 
         Integer opcao;
@@ -42,38 +43,32 @@ public class Main
     }
 
     private static void reservarMesa() {
-        boolean reservaDisponivel = verificarDisponibilidade();
+
         Integer tipoCliente = tipoCliente();
         boolean pagamentoAVista = pagamentoAVista();
-        if(!reservaDisponivel){
+        if(reservas.size()>5){
             JOptionPane.showMessageDialog(null,"Reservas esgotadas. Você entrará na lista de espera.");
         }
         if(tipoCliente == 1){   
+            System.out.println(reservas.size());
             String nome = JOptionPane.showInputDialog("Informe o nome: " );
             String cnpj = JOptionPane.showInputDialog("Informe o CNPJ: " );
             Cliente cliente = new PessoaJuridica(nome, cnpj);
-            if(reservaDisponivel){
+            if(reservas.size()<6){
                 reservas.add(new Reserva(cliente, pagamentoAVista));
             }else{
                 listaDeEspera.add(new Reserva(cliente, pagamentoAVista));
+                System.out.println("lista de espera "+listaDeEspera.size());
             }
         }else{
             String nome = JOptionPane.showInputDialog("Informe o nome: " );
             String cpf = JOptionPane.showInputDialog("Informe o CPF: " );
             Cliente cliente = new PessoaFisica(nome, cpf);
-            if(reservaDisponivel){
+            if(reservas.size()<6){
                 reservas.add(new Reserva(cliente, pagamentoAVista));
             }else{
                 listaDeEspera.add(new Reserva(cliente, pagamentoAVista));
             }
-        }
-    }
-
-    private static boolean verificarDisponibilidade() {
-        if(reservas.size()<=6){
-            return true;
-        }else{
-            return false;
         }
     }
 
