@@ -30,9 +30,23 @@ public class Main
             imprimirReserva();
             opcao = menu();
             break;
+            case 4:
+            imprimirListaDeEspera();
+            opcao = menu();
+            break;
             }
         }
         
+    }
+
+    private static void imprimirListaDeEspera() {
+        String listagemEspera = "";
+        Integer i = 1;
+        for(Reserva item : listaDeEspera){
+            listagemEspera += "\n Posição na lista de espera: " + i.toString() + item.toString();
+            i++;
+        }
+        JOptionPane.showMessageDialog(null,listagemEspera);
     }
 
     private static void imprimirReserva() {
