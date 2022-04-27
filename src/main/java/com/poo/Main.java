@@ -26,9 +26,17 @@ public class Main
             pesquisarReserva();
             opcao = menu();
             break;
+            case 3:
+            imprimirReserva();
+            opcao = menu();
+            break;
             }
         }
         
+    }
+
+    private static void imprimirReserva() {
+        JOptionPane.showMessageDialog(null,reservas.toString());
     }
 
     private static void pesquisarReserva() {
@@ -46,11 +54,11 @@ public class Main
 
         Integer tipoCliente = tipoCliente();
         boolean pagamentoAVista = pagamentoAVista();
+
         if(reservas.size()>5){
             JOptionPane.showMessageDialog(null,"Reservas esgotadas. Você entrará na lista de espera.");
         }
         if(tipoCliente == 1){   
-            System.out.println(reservas.size());
             String nome = JOptionPane.showInputDialog("Informe o nome: " );
             String cnpj = JOptionPane.showInputDialog("Informe o CNPJ: " );
             Cliente cliente = new PessoaJuridica(nome, cnpj);
@@ -58,7 +66,7 @@ public class Main
                 reservas.add(new Reserva(cliente, pagamentoAVista));
             }else{
                 listaDeEspera.add(new Reserva(cliente, pagamentoAVista));
-                System.out.println("lista de espera "+listaDeEspera.size());
+                System.out.println(listaDeEspera.size());
             }
         }else{
             String nome = JOptionPane.showInputDialog("Informe o nome: " );
@@ -78,9 +86,9 @@ public class Main
         while(tipoPagamento == null || tipoPagamento < 1 || tipoPagamento > 2){
             try{
                 tipoPagamento = Integer.parseInt(JOptionPane.showInputDialog("Digite 1 para pagamento a vista e 2 para pagamento parcelado." ));   
-                if(tipoPagamento.equals("1")){
+                if(tipoPagamento == 1){
                     pagamentoAVista = true;
-                }else{
+                }else if(tipoPagamento == 2){
                     pagamentoAVista = false;
                 }
             }catch(Exception e){

@@ -12,7 +12,13 @@ public class Reserva implements Pagamento{
 
     @Override
     public String toString() {
-        return "{cliente: "+this.cliente+", pagamentoAVista: "+this.pagamentoAVista+"}";
+        String tipoPagamento;
+        if(this.pagamentoAVista){
+            tipoPagamento = "a vista";
+        }else{
+            tipoPagamento = "parcelado";
+        }
+        return "\n"+this.cliente+", forma de pagamento: "+ tipoPagamento;
     }
 
     @Override

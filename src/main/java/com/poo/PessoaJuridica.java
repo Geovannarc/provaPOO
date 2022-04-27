@@ -11,7 +11,7 @@ public class PessoaJuridica extends Cliente {
 
     @Override
     public String toString() {
-        return super.toString()+", cnpj: "+this.cnpj;
+        return super.toString()+", pessoa jurídica";
     }
     
 }
