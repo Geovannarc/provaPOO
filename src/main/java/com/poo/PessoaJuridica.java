@@ -13,5 +13,9 @@ public class PessoaJuridica extends Cliente {
     public String toString() {
         return super.toString()+", pessoa jurídica";
     }
+
+    public String getCNPJ(){
+        return cnpj;
+    }
     
 }

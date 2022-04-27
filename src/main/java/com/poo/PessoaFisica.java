@@ -14,4 +14,7 @@ public class PessoaFisica extends Cliente {
         return super.toString()+", pessoa física";
     }
 
+    public String getCPF(){
+        return cpf;
+    }
 }

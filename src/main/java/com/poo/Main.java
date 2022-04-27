@@ -16,7 +16,7 @@ public class Main
         Integer opcao;
         opcao = menu();
         
-        while(opcao<=6 && opcao>=1){
+        while(opcao<6 && opcao>=1){
             switch(opcao){
             case 1:
             reservarMesa();
@@ -34,9 +34,21 @@ public class Main
             imprimirListaDeEspera();
             opcao = menu();
             break;
+            case 5:
+            cancelarReserva();
+            opcao = menu();
+            break;
             }
         }
         
+    }
+
+    private static void cancelarReserva() {
+        Reserva clienteReserva = pesquisarReserva();
+
+        boolean deletado = reservas.remove(clienteReserva);
+
+        JOptionPane.showMessageDialog(null,"Reserva cancelada.");
     }
 
     private static void imprimirListaDeEspera() {
@@ -53,15 +65,31 @@ public class Main
         JOptionPane.showMessageDialog(null,reservas.toString());
     }
 
-    private static void pesquisarReserva() {
+    private static Reserva pesquisarReserva() {
+        boolean temReserva = false;
+        Reserva clienteReserva = null;
         String codigo = JOptionPane.showInputDialog("Informe o CPF ou CNPJ: " );
-        String totalReservas = reservas.toString();
-        boolean temReserva = totalReservas.contains(codigo);
+        for (Reserva reserva : reservas) {
+            if (reserva.cliente instanceof PessoaFisica) {
+                PessoaFisica cliente = (PessoaFisica) reserva.cliente;
+                if (cliente.getCPF().equals(codigo)){
+                    temReserva = true;
+                    clienteReserva = reserva;
+                }
+            } else {
+                PessoaJuridica cliente = (PessoaJuridica) reserva.cliente;
+                if (cliente.getCNPJ().equals(codigo)){
+                    temReserva = true;
+                    clienteReserva = reserva;
+                }
+            }
+        }
         if(temReserva){
             JOptionPane.showMessageDialog(null,"Você tem reserva.");
         }else{
             JOptionPane.showMessageDialog(null,"Você não tem reserva.");
         }
+        return clienteReserva;
     }
 
     private static void reservarMesa() {
@@ -75,7 +103,7 @@ public class Main
         if(tipoCliente == 1){   
             String nome = JOptionPane.showInputDialog("Informe o nome: " );
             String cnpj = JOptionPane.showInputDialog("Informe o CNPJ: " );
-            Cliente cliente = new PessoaJuridica(nome, cnpj);
+            PessoaJuridica cliente = new PessoaJuridica(nome, cnpj);
             if(reservas.size()<6){
                 reservas.add(new Reserva(cliente, pagamentoAVista));
             }else{
@@ -85,7 +113,7 @@ public class Main
         }else{
             String nome = JOptionPane.showInputDialog("Informe o nome: " );
             String cpf = JOptionPane.showInputDialog("Informe o CPF: " );
-            Cliente cliente = new PessoaFisica(nome, cpf);
+            PessoaFisica cliente = new PessoaFisica(nome, cpf);
             if(reservas.size()<6){
                 reservas.add(new Reserva(cliente, pagamentoAVista));
             }else{
@@ -97,18 +125,18 @@ public class Main
     private static boolean pagamentoAVista() {
         boolean pagamentoAVista = false;
         Integer tipoPagamento = null;
-        while(tipoPagamento == null || tipoPagamento < 1 || tipoPagamento > 2){
-            try{
-                tipoPagamento = Integer.parseInt(JOptionPane.showInputDialog("Digite 1 para pagamento a vista e 2 para pagamento parcelado." ));   
-                if(tipoPagamento == 1){
-                    pagamentoAVista = true;
-                }else if(tipoPagamento == 2){
-                    pagamentoAVista = false;
-                }
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(null,"Por favor, digite um número.");
-            } 
-        }
+            while(tipoPagamento == null || tipoPagamento < 1 || tipoPagamento > 2){
+                try{
+                    tipoPagamento = Integer.parseInt(JOptionPane.showInputDialog("Digite 1 para pagamento a vista e 2 para pagamento parcelado." ));   
+                    if(tipoPagamento == 1){
+                        pagamentoAVista = true;
+                    }else if(tipoPagamento == 2){
+                        pagamentoAVista = false;
+                    }
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null,"Por favor, digite um número.");
+                } 
+            }
         return pagamentoAVista; 
     }
 

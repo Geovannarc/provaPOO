@@ -2,7 +2,7 @@ package com.poo;
 
 public class Reserva implements Pagamento{
     
-    private Cliente cliente;
+    Cliente cliente;
     private boolean pagamentoAVista;
 
     public Reserva(Cliente cliente, boolean pagamentoAVista){
@@ -26,7 +26,7 @@ public class Reserva implements Pagamento{
         return pagamentoAVista ? 0.9*3200.00 : 3200.00;
     }
 
-    public String getCliente() {
-        return cliente.getClass().getName().compareTo("PessoaFisica") == 0 ? "Pessoa Física" : "Pessoa Jurídica";
+    public Cliente getCliente() {
+        return cliente;
     }
 }
